@@ -25,17 +25,19 @@ const handler = async (req, res) => {
         console.log(latest);
         console.log(result);
 
-        return res.status(200).json({
+        res.status(200).json({
             proxy: req.headers["x-forwarded-for"],
             ip: req.connection.remoteAddress || "nope",
             payload: req.headers.host, 
             date: d.toString()
         });   
+        return;
     }catch(e){
         console.error(e);
-        return res.status(400).json({
+        res.status(400).json({
             error: e
         });
+        return;
     }
 }
 
