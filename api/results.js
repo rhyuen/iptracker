@@ -1,15 +1,9 @@
-const mongoose = require("mongoose");
 const allowCors = require("./mw/cors.js");
+const handleDB = require("./mw/db.js");
 const Trackee = require("../models/trackee.js");
 
 async function handler(req, res){
-    try{
-        const {db} = process.env;
-        await mongoose.connect(db, {
-            useNewUrlParser:true, 
-            useUnifiedTopology: true
-        });
-
+    try{        
         const result = await Trackee.find({});
 
         res.status(200).json({
@@ -19,6 +13,7 @@ async function handler(req, res){
         });
         return;
     }  catch(e){
+        console.log(e);
         res.status(400).json({
             path: "/results",
             error: e
@@ -28,4 +23,4 @@ async function handler(req, res){
 }
 
 
-module.exports = allowCors(handler);
+module.exports = allowCors(handleDB(handler));

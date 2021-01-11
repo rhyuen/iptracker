@@ -1,44 +1,39 @@
 
 const allowCors = require("./mw/cors.js");
+const handleDB = require("./mw/db.js");
 const Trackee = require("../models/trackee");
-const mongoose = require("mongoose");
+const validator = require("validator");
 
 const handler = async (req, res) => {    
-    try{
-        const d = new Date();
-        console.log(req.headers["x-forwarded-for"]);
+    try{        
+        console.log(req.headers["x-forwarded-for"]);        
 
-        const {db} = process.env;
-
-        await mongoose.connect(db, {
-            useNewUrlParser:true, 
-            useUnifiedTopology: true
-        });
+        let visitorIPAddress = req.headers["x-forwarded-for"];
+        if(!validator.isIP(visitorIPAddress, 4)){
+            console.log(`${visitorIPAddress} is not a valid ip address`);            
+            visitorIPAddress = "0.0.0.0";
+        }
 
         const latest = new Trackee({
-            ip: req.connection.remoteAddress,
+            ip: visitorIPAddress,
             origin: "arbitrary"
         })
 
         const result = await latest.save();
-
-        console.log(latest);
+        
         console.log(result);
 
-        res.status(200).json({
+        return res.status(200).json({
             proxy: req.headers["x-forwarded-for"],
-            ip: req.connection.remoteAddress || "nope",
-            payload: req.headers.host, 
-            date: d.toString()
-        });   
-        return;
+            ip: req.headers["x-forwarded-for"] || req.connection.remoteAddress || "nope",
+            payload: req.headers.host            
+        });           
     }catch(e){
         console.error(e);
-        res.status(400).json({
+        return res.status(400).json({
             error: e
-        });
-        return;
+        });        
     }
 }
 
-module.exports = allowCors(handler);
+module.exports = allowCors(handleDB(handler));
