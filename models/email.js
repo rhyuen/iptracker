@@ -3,6 +3,10 @@ const mongoose = require("mongoose");
 const emailSchema = mongoose.Schema({
     email: String,
     origin: String    
-}, {timeStamps: true});
+}, {
+    timestamps: {
+        createdAt: "created_at"
+    }
+});
 
 module.exports = mongoose.model("Email", emailSchema);
