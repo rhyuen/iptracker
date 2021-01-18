@@ -12,7 +12,7 @@ const handler = async (req, res) => {
             return;        
         }
 
-        const {email} = req.body;
+        const {email} = req.body;        
 
         if(!validator.isEmail(email)){
             return res.status(400).json({
