@@ -22,6 +22,7 @@ jobs:
                   name: test
                   command: |                        
                         sudo npm install -g vercel
+                        echo $VERCEL_TOKEN
                         npm run dev:test                                 
             - store_artifacts:
                   path: coverage      
