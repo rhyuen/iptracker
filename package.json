@@ -5,10 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "ci:test": "vercel dev --listen 8080 --token $VERCEL_TOKEN --confirm &",
+    "dev:start": "vercel dev --listen 8080 &",
+    "dev:test": "npm run dev:start && npm run test && npm run cleanup",
+    "ci:dev": "vercel dev --listen 8080 --token $VERCEL_TOKEN --confirm &",
     "deploy": "vercel --prod",
     "cleanup": "ps | grep node | awk '{print $1}' | xargs kill -9 $1",
-    "dev:test": "NODE_ENV=test npm run ci:test && npm run test && npm run cleanup"
+    "ci": "NODE_ENV=test npm run ci:dev && npm run test && npm run cleanup"
   },
   "keywords": [],
   "author": "",
