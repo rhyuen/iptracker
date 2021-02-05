@@ -32,8 +32,7 @@ const handler = async (req, res) => {
         return res.status(200).json({
             proxy: result.origin,
             path: result.path,
-            ip: req.headers["x-forwarded-for"] || req.connection.remoteAddress || "nope",
-            payload: req.headers.host            
+            ip: req.headers["x-forwarded-for"] || req.connection.remoteAddress || "nope"            
         });           
     }catch(e){
         console.error(e);
