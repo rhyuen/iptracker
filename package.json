@@ -7,7 +7,7 @@
     "test": "jest",
     "dev:start": "vercel dev --listen 8080 &",
     "dev:test": "npm run dev:start && npm run test && npm run cleanup",
-    "ci:dev": "vercel dev --listen 8080 --token $VERCEL_TOKEN --confirm &",
+    "ci:dev": "vercel dev --listen 8080 --token $VERCEL_TOKEN --confirm & && wait-on tcp:8080",
     "deploy": "vercel --prod",
     "cleanup": "ps | grep node | awk '{print $1}' | xargs kill -9 $1",
     "ci": "NODE_ENV=test npm run ci:dev && npm run test && npm run cleanup"
@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "jest": "^26.6.3",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "wait-on": "^5.2.1"
   }
 }
