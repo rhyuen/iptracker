@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-    test:
+      test:
         working_directory: ~/appishere
         docker:
             - image: circleci/node:12.9.0            
@@ -33,9 +33,9 @@ jobs:
             docker:
                   - image: circleci/node:12.9.0
             steps:
-             - checkout
+            - checkout
             - run:
-                  name: update-npm
+                  name: "update-npm"
                   command: "sudo npm install -g npm@latest"
             - restore_cache:
                   key: dependency-cache-{{ checksum "package-lock.json" }}
