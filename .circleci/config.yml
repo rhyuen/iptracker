@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-    build:
+    test:
         working_directory: ~/appishere
         docker:
             - image: circleci/node:12.9.0            
@@ -21,12 +21,43 @@ jobs:
             - run:
                   name: test
                   command: |                        
-                        sudo npm install -g vercel                        
-                        echo hi
-                        echo $VERCEL_TOKEN
-                        echo bye
-                        npm run ci                                
+                        sudo npm install -g vercel                                               
+                        npm run ci      
+                        npm run cleanup
             - store_artifacts:
                   path: coverage      
             - store_test_results:
                   path: coverage
+      deploy:
+            working_directory: ~/appishere
+            docker:
+                  - image: circleci/node:12.9.0
+            steps:
+             - checkout
+            - run:
+                  name: update-npm
+                  command: "sudo npm install -g npm@latest"
+            - restore_cache:
+                  key: dependency-cache-{{ checksum "package-lock.json" }}
+            - run:
+                  name: install-npm-wee
+                  command: npm install
+            - save_cache:
+                  key: dependency-cache-{{ checksum "package-lock.json" }}
+                  paths:
+                  - ./node_modules           
+            - run:
+                  name: deploy
+                  command: |
+                        sudo npm install -g vercel
+                        echo "deploying to production"
+                        vercel --token $VERCEL_TOKEN --confirm --prod
+
+workflows:
+      version: 2
+      test_and_deploy:
+            jobs:
+                  - test
+                  - deploy:
+                        requires:
+                              - test

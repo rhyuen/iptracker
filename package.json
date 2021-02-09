@@ -6,11 +6,11 @@
   "scripts": {
     "test": "jest",
     "dev:start": "vercel dev --listen 8080 &",
-    "dev:test": "npm run dev:start && npm run test && npm run cleanup",
+    "dev:test": "npm run dev:start && wait-on tcp:8080 && npm run test && npm run cleanup",
     "ci:dev": "vercel dev --listen 8080 --token $VERCEL_TOKEN --confirm &",
     "deploy": "vercel --prod",
     "cleanup": "ps | grep node | awk '{print $1}' | xargs kill -9 $1",
-    "ci": "NODE_ENV=test npm run ci:dev && wait-on tcp:8080 && npm run test && npm run cleanup"
+    "ci": "NODE_ENV=test npm run ci:dev && wait-on tcp:8080 && npm run test"
   },
   "keywords": [],
   "author": "",
